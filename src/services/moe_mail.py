@@ -4,6 +4,7 @@
 """
 
 import re
+import random
 import time
 import json
 import logging
@@ -208,9 +209,13 @@ class MeoMailEmailService(BaseEmailService):
         sys_config = self.get_config()
         default_domain = self.config.get("default_domain")
         if not default_domain and sys_config.get("emailDomains"):
-            # 使用系统配置的第一个域名
-            domains = sys_config["emailDomains"].split(",")
-            default_domain = domains[0].strip() if domains else None
+            # # 使用系统配置的第一个域名
+            # domains = sys_config["emailDomains"].split(",")
+            # default_domain = domains[0].strip() if domains else None
+
+            # 从系统配置的多个域名中随机选取一个
+            domains = [d.strip() for d in sys_config["emailDomains"].split(",") if d.strip()]
+            default_domain = random.choice(domains) if domains else None
 
         # 构建请求参数
         request_config = config or {}
